@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur d'intérêts moratoires suisse</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <meta name="description" content="Calculez les intérêts moratoires selon le Code des obligations suisse (CO art. 104). Gratuit, rapide et juridiquement correct.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header-row">
+            <div class="logo-container">
+                <img src="https://www.durchblick.nl/images/durchblick_logo.svg"
+                     alt="Durchblick Consultancy Logo"
+                     class="logo">
+            </div>
+            <div class="language-switcher">
+                <a href="../de/" class="lang-btn">DE</a>
+                <a href="../fr/" class="lang-btn active">FR</a>
+            </div>
+        </div>
+
+        <h1>Calculateur d'intérêts moratoires</h1>
+
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="fas fa-coins"></i>
+                    <div class="step-number">1</div>
+                </div>
+                <div class="step-content">
+                    <h3>Saisir le capital</h3>
+                    <p>Entrez le montant dû sur lequel les intérêts moratoires doivent être calculés.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="fas fa-calendar-day"></i>
+                    <div class="step-number">2</div>
+                </div>
+                <div class="step-content">
+                    <h3>Choisir la période</h3>
+                    <p>Déterminez le début de la demeure (échéance) et la date jusqu'à laquelle calculer.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="fas fa-percent"></i>
+                    <div class="step-number">3</div>
+                </div>
+                <div class="step-content">
+                    <h3>Fixer le taux</h3>
+                    <p>Le taux légal est de 5% p.a. (CO art. 104). Un taux contractuel peut être différent.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="calculator-card">
+            <form id="zinsForm">
+                <div class="form-group">
+                    <label for="principal" class="required">Montant du capital (CHF)
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Le montant sur lequel les intérêts moratoires sont dus. C'est généralement la créance impayée.</span>
+                        </span>
+                    </label>
+                    <div class="currency-input-wrapper">
+                        <input type="text"
+                               id="principal"
+                               name="principal"
+                               required
+                               placeholder="p.ex. 10'000.00"
+                               title="Montant en CHF">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="startDate" class="required">Début de la demeure (date d'échéance)
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">À partir de cette date, le débiteur doit des intérêts moratoires. En cas de mise en demeure : lendemain de la réception.</span>
+                        </span>
+                    </label>
+                    <input type="text"
+                           id="startDate"
+                           name="startDate"
+                           required
+                           title="Date du début de la demeure"
+                           pattern="\d{2}\.\d{2}\.\d{4}">
+                    <small class="form-hint">Format : JJ.MM.AAAA</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="endDate" class="required">Date de calcul (jusqu'au)
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">La date jusqu'à laquelle les intérêts doivent être calculés. Souvent la date du jour ou la date de paiement prévue.</span>
+                        </span>
+                    </label>
+                    <input type="text"
+                           id="endDate"
+                           name="endDate"
+                           required
+                           title="Date de calcul"
+                           pattern="\d{2}\.\d{2}\.\d{4}">
+                    <small class="form-hint">Format : JJ.MM.AAAA</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="rateType">Taux d'intérêt
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Le taux légal est de 5% p.a. (CO art. 104). Un taux plus élevé peut être convenu contractuellement.</span>
+                        </span>
+                    </label>
+                    <select id="rateType" name="rateType" onchange="toggleCustomRate()">
+                        <option value="5">Taux légal : 5% p.a. (CO art. 104)</option>
+                        <option value="custom">Taux contractuel</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="customRateGroup" style="display: none;">
+                    <label for="customRate" class="required">Taux contractuel (% p.a.)</label>
+                    <input type="number"
+                           id="customRate"
+                           name="customRate"
+                           step="0.01"
+                           min="0"
+                           max="100"
+                           placeholder="p.ex. 8.5"
+                           class="form-control">
+                </div>
+
+                <div class="warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Attention : Ce calculateur sert uniquement d'orientation. Pour des calculs contraignants, consultez un avocat.
+                </div>
+
+                <button type="submit">Calculer les intérêts</button>
+            </form>
+
+            <div id="result" class="result" style="display: none;">
+                <div class="result-actions">
+                    <button type="button" onclick="printResult()" class="print-button">
+                        <i class="fas fa-print"></i> Imprimer le résultat
+                    </button>
+                </div>
+                <div class="result-summary"></div>
+            </div>
+        </div>
+
+        <div class="info-cards-container">
+            <div class="info-step-card highlight">
+                <div class="step-icon">
+                    <i class="fas fa-gavel"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Base légale</h3>
+                    <p><strong>CO art. 104 :</strong> Le débiteur qui est en demeure pour le paiement d'une somme d'argent doit l'intérêt moratoire à <strong>5%</strong> l'an, même si un taux inférieur avait été convenu.</p>
+                    <p style="margin-top: 0.5rem;"><strong>CO art. 105 :</strong> Si des intérêts conventionnels plus élevés ont été convenus, des intérêts moratoires plus élevés peuvent être exigés.</p>
+                </div>
+            </div>
+
+            <div class="info-step-card">
+                <div class="step-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Début de la demeure</h3>
+                    <p>La demeure intervient :</p>
+                    <ul>
+                        <li>À l'échéance : Le jour suivant l'échéance</li>
+                        <li>Par mise en demeure : Le jour suivant la réception</li>
+                        <li>Par action en justice : Le jour suivant la notification</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-step-card">
+                <div class="step-icon">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Méthode de calcul</h3>
+                    <p>Le calcul est effectué selon la <strong>méthode des 360 jours</strong> (méthode commerciale), courante en pratique suisse.</p>
+                    <p style="margin-top: 0.5rem;"><strong>Formule :</strong> Capital × Taux × Jours ÷ 360</p>
+                </div>
+            </div>
+
+            <div class="info-step-card">
+                <div class="step-icon">
+                    <i class="fas fa-ban"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Interdiction de l'anatocisme</h3>
+                    <p><strong>CO art. 105 al. 3 :</strong> Il n'est pas dû d'intérêts moratoires sur les intérêts moratoires. Les intérêts sont calculés uniquement sur le capital, pas sur les intérêts déjà courus.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="law-section">
+            <h2>Texte de loi</h2>
+            <p class="law-subtitle">Code des obligations suisse (CO)</p>
+
+            <div class="law-card">
+                <div class="law-header">
+                    <h3><a href="https://www.fedlex.admin.ch/eli/cc/27/317_321_377/fr#art_104" target="_blank" rel="noopener">Art. 104 CO – Intérêts moratoires <i class="fas fa-external-link-alt"></i></a></h3>
+                </div>
+                <div class="law-content">
+                    <ol>
+                        <li>Le débiteur qui est en demeure pour le paiement d'une somme d'argent doit l'intérêt moratoire à 5 % l'an, même si un taux inférieur avait été stipulé pour l'intérêt conventionnel.</li>
+                        <li>Si le contrat stipule, directement ou sous la forme d'une provision de banque périodique, un intérêt supérieur à 5 %, cet intérêt plus élevé peut également être exigé du débiteur en demeure.</li>
+                        <li>Entre commerçants, tant que l'escompte dans le lieu du paiement est supérieur à 5 %, l'intérêt moratoire peut être calculé au taux de l'escompte.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="law-card">
+                <div class="law-header">
+                    <h3><a href="https://www.fedlex.admin.ch/eli/cc/27/317_321_377/fr#art_105" target="_blank" rel="noopener">Art. 105 CO – Dommage supplémentaire <i class="fas fa-external-link-alt"></i></a></h3>
+                </div>
+                <div class="law-content">
+                    <ol>
+                        <li>Le débiteur en demeure pour le paiement d'intérêts, d'arrérages ou d'une somme dont il a fait donation, ne doit l'intérêt moratoire qu'à partir du jour de la poursuite ou de l'action.</li>
+                        <li>Toute stipulation contraire s'apprécie conformément aux règles qui régissent la clause pénale.</li>
+                        <li>Des intérêts ne peuvent être portés en compte pour cause de retard dans le paiement des intérêts moratoires.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>
+                <a href="https://durchblick.nl" target="_blank" rel="noopener">Durchblick Consultancy BV</a>
+                &nbsp;•&nbsp;
+                <a href="https://github.com/chosee/verzugszinsrechner" target="_blank" rel="noopener">
+                    <i class="fab fa-github"></i> Code source sur GitHub
+                </a>
+            </p>
+            <p class="footer-disclaimer">Ce calculateur sert uniquement d'orientation. Pas de conseil juridique.</p>
+        </div>
+    </footer>
+
+    <div class="print-header" style="display: none;">
+        <img src="https://www.durchblick.nl/images/durchblick_logo.svg"
+             alt="Durchblick Consultancy Logo">
+        <div>
+            <h2>Calcul des intérêts moratoires</h2>
+            <p id="printDate" style="font-size: 0.9rem; color: #666; margin-top: 0.25rem;"></p>
+        </div>
+    </div>
+
+    <div class="print-footer" style="display: none;">
+        <p><strong>verzugszinsrechner.ch</strong> – Calculateur d'intérêts moratoires selon le Code des obligations suisse (CO)</p>
+        <p>Ce document sert uniquement d'orientation. Pas de conseil juridique.</p>
+    </div>
+
+    <div id="disclaimerModal" class="modal">
+        <div class="modal-content">
+            <h2>Avis juridique</h2>
+            <div class="disclaimer-text">
+                <p><strong>Exclusion de responsabilité et conditions d'utilisation</strong></p>
+                <p>Durchblick Consultancy BV met ce calculateur à disposition en tant qu'outil indicatif. Malgré un développement soigneux, aucune garantie ne peut être donnée quant à l'exactitude des calculs.</p>
+
+                <p>Il est notamment rappelé que :</p>
+                <ul>
+                    <li>Ce calculateur sert uniquement d'orientation et ne remplace pas un conseil juridique.</li>
+                    <li>Pour des calculs contraignants, consultez un avocat.</li>
+                    <li>Durchblick Consultancy BV décline toute responsabilité pour les dommages résultant de l'utilisation.</li>
+                </ul>
+
+                <p>En utilisant ce calculateur, vous acceptez ces conditions.</p>
+            </div>
+            <button onclick="acceptDisclaimer()" class="accept-button">
+                J'ai lu l'avis et j'accepte les conditions
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="../scripts/calculations.js"></script>
+    <script src="../scripts/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background circle with Durchblick blue -->
+  <circle cx="50" cy="50" r="48" fill="#1375bc"/>
+
+  <!-- Percent symbol representing interest -->
+  <text x="50" y="68" font-family="Arial, sans-serif" font-size="50" font-weight="bold" fill="white" text-anchor="middle">%</text>
+
+  <!-- Small clock indicator for "Verzug" (delay) -->
+  <circle cx="78" cy="22" r="14" fill="#bc3c31"/>
+  <circle cx="78" cy="22" r="10" fill="white"/>
+  <!-- Clock hands -->
+  <line x1="78" y1="22" x2="78" y2="16" stroke="#bc3c31" stroke-width="2" stroke-linecap="round"/>
+  <line x1="78" y1="22" x2="83" y2="22" stroke="#bc3c31" stroke-width="2" stroke-linecap="round"/>
+</svg>

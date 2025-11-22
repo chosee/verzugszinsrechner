@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verzugszinsrechner.ch - Weiterleitung</title>
+    <script>
+        (function() {
+            // Check localStorage for previous language preference
+            const savedLang = localStorage.getItem('verzugszins-lang');
+            if (savedLang) {
+                window.location.href = '/' + savedLang + '/';
+                return;
+            }
+
+            // Detect browser language
+            const browserLang = navigator.language || navigator.userLanguage;
+            const lang = browserLang.startsWith('fr') ? 'fr' : 'de';
+
+            // Redirect to language-specific page
+            window.location.href = '/' + lang + '/';
+        })();
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="0;url=/de/">
+    </noscript>
+</head>
+<body>
+    <p>Weiterleitung... / Redirection...</p>
+    <p><a href="/de/">Deutsch</a> | <a href="/fr/">Français</a></p>
+</body>
+</html>

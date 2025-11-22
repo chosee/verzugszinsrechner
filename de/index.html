@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schweizer Verzugszinsrechner - Verzugszinsen einfach berechnen</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <meta name="description" content="Berechnen Sie Verzugszinsen nach Schweizer Obligationenrecht (OR Art. 104). Kostenlos, schnell und rechtlich korrekt.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header-row">
+            <div class="logo-container">
+                <img src="https://www.durchblick.nl/images/durchblick_logo.svg"
+                     alt="Durchblick Consultancy Logo"
+                     class="logo">
+            </div>
+            <div class="language-switcher">
+                <a href="../de/" class="lang-btn active">DE</a>
+                <a href="../fr/" class="lang-btn">FR</a>
+            </div>
+        </div>
+
+        <h1>Schweizer Verzugszinsrechner</h1>
+
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="fas fa-coins"></i>
+                    <div class="step-number">1</div>
+                </div>
+                <div class="step-content">
+                    <h3>Kapital eingeben</h3>
+                    <p>Geben Sie den geschuldeten Betrag ein, auf den Verzugszinsen berechnet werden sollen.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="fas fa-calendar-day"></i>
+                    <div class="step-number">2</div>
+                </div>
+                <div class="step-content">
+                    <h3>Zeitraum wählen</h3>
+                    <p>Bestimmen Sie den Beginn des Verzugs (Fälligkeit) und das Datum, bis zu dem gerechnet werden soll.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="fas fa-percent"></i>
+                    <div class="step-number">3</div>
+                </div>
+                <div class="step-content">
+                    <h3>Zinssatz festlegen</h3>
+                    <p>Der gesetzliche Verzugszins beträgt 5% p.a. (OR Art. 104). Ein vertraglicher Zinssatz kann abweichen.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="calculator-card">
+            <form id="zinsForm">
+                <div class="form-group">
+                    <label for="principal" class="required">Kapitalbetrag (CHF)
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Der Betrag, auf den Verzugszinsen geschuldet sind. Dies ist typischerweise die offene Forderung.</span>
+                        </span>
+                    </label>
+                    <div class="currency-input-wrapper">
+                        <input type="text"
+                               id="principal"
+                               name="principal"
+                               required
+                               placeholder="z.B. 10'000.00"
+                               title="Kapitalbetrag in CHF">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="startDate" class="required">Verzugsbeginn (Fälligkeitsdatum)
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Ab diesem Datum wird der Schuldner verzugszinspflichtig. Bei Mahnungen: Tag nach Zugang der Mahnung.</span>
+                        </span>
+                    </label>
+                    <input type="text"
+                           id="startDate"
+                           name="startDate"
+                           required
+                           title="Datum des Verzugsbeginns"
+                           pattern="\d{2}\.\d{2}\.\d{4}">
+                    <small class="form-hint">Format: TT.MM.JJJJ</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="endDate" class="required">Berechnungsdatum (bis)
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Das Datum, bis zu dem die Verzugszinsen berechnet werden sollen. Oft das heutige Datum oder das geplante Zahlungsdatum.</span>
+                        </span>
+                    </label>
+                    <input type="text"
+                           id="endDate"
+                           name="endDate"
+                           required
+                           title="Berechnungsdatum"
+                           pattern="\d{2}\.\d{2}\.\d{4}">
+                    <small class="form-hint">Format: TT.MM.JJJJ</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="rateType">Zinssatz
+                        <span class="info-tooltip">
+                            <span class="info-icon">?</span>
+                            <span class="tooltip-content">Der gesetzliche Verzugszins beträgt 5% p.a. (OR Art. 104). Vertraglich kann ein höherer Zins vereinbart werden.</span>
+                        </span>
+                    </label>
+                    <select id="rateType" name="rateType" onchange="toggleCustomRate()">
+                        <option value="5">Gesetzlicher Zinssatz: 5% p.a. (OR Art. 104)</option>
+                        <option value="custom">Vertraglicher Zinssatz</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="customRateGroup" style="display: none;">
+                    <label for="customRate" class="required">Vertraglicher Zinssatz (% p.a.)</label>
+                    <input type="number"
+                           id="customRate"
+                           name="customRate"
+                           step="0.01"
+                           min="0"
+                           max="100"
+                           placeholder="z.B. 8.5"
+                           class="form-control">
+                </div>
+
+                <div class="warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Achtung: Dieser Rechner dient nur zur Orientierung. Für verbindliche Berechnungen konsultieren Sie einen Rechtsanwalt.
+                </div>
+
+                <button type="submit">Verzugszins berechnen</button>
+            </form>
+
+            <div id="result" class="result" style="display: none;">
+                <div class="result-actions">
+                    <button type="button" onclick="printResult()" class="print-button">
+                        <i class="fas fa-print"></i> Ergebnis drucken
+                    </button>
+                </div>
+                <div class="result-summary"></div>
+            </div>
+        </div>
+
+        <div class="info-cards-container">
+            <div class="info-step-card highlight">
+                <div class="step-icon">
+                    <i class="fas fa-gavel"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Gesetzliche Grundlage</h3>
+                    <p><strong>OR Art. 104:</strong> Der Schuldner, der mit der Zahlung einer Geldschuld in Verzug ist, hat Verzugszinse von <strong>5%</strong> zu bezahlen, auch wenn die vertragsmässigen Zinse geringer waren.</p>
+                    <p style="margin-top: 0.5rem;"><strong>OR Art. 105:</strong> Waren höhere vertragliche Zinsen vereinbart, können auch höhere Verzugszinsen verlangt werden.</p>
+                </div>
+            </div>
+
+            <div class="info-step-card">
+                <div class="step-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Verzugsbeginn</h3>
+                    <p>Der Verzug tritt ein:</p>
+                    <ul>
+                        <li>Bei Verfalltag: Am Tag nach dem Verfalltag</li>
+                        <li>Bei Mahnung: Am Tag nach Zugang der Mahnung</li>
+                        <li>Bei Klageerhebung: Am Tag nach Zustellung der Klage</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-step-card">
+                <div class="step-icon">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Berechnungsmethode</h3>
+                    <p>Die Berechnung erfolgt nach der <strong>360-Tage-Methode</strong> (kaufmännische Zinsmethode), die in der Schweizer Praxis üblich ist.</p>
+                    <p style="margin-top: 0.5rem;"><strong>Formel:</strong> Kapital × Zinssatz × Tage ÷ 360</p>
+                </div>
+            </div>
+
+            <div class="info-step-card">
+                <div class="step-icon">
+                    <i class="fas fa-ban"></i>
+                </div>
+                <div class="step-content">
+                    <h3>Zinseszinsverbot</h3>
+                    <p><strong>OR Art. 105 Abs. 3:</strong> Zinseszinsen (Zinsen auf Zinsen) sind grundsätzlich nicht zulässig. Der Verzugszins wird nur auf das Kapital berechnet, nicht auf bereits aufgelaufene Zinsen.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="law-section">
+            <h2>Gesetzestext</h2>
+            <p class="law-subtitle">Schweizerisches Obligationenrecht (OR)</p>
+
+            <div class="law-card">
+                <div class="law-header">
+                    <h3><a href="https://www.fedlex.admin.ch/eli/cc/27/317_321_377/de#art_104" target="_blank" rel="noopener">Art. 104 OR – Verzugszinse <i class="fas fa-external-link-alt"></i></a></h3>
+                </div>
+                <div class="law-content">
+                    <ol>
+                        <li>Ist der Schuldner mit der Zahlung einer Geldschuld in Verzug, so hat er Verzugszinse zu fünf vom Hundert für das Jahr zu bezahlen, selbst wenn die vertragsmässigen Zinse weniger betragen.</li>
+                        <li>Sind durch Vertrag höhere Zinse als fünf vom Hundert, sei es direkt, sei es durch Verabredung einer periodischen Bankprovision, ausbedungen worden, so können sie auch während des Verzuges gefordert werden.</li>
+                        <li>Unter Kaufleuten können für die Zeit, wo der übliche Bankdiskonto am Zahlungsorte fünf vom Hundert übersteigt, die Verzugszinse zu diesem höheren Zinsfusse berechnet werden.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="law-card">
+                <div class="law-header">
+                    <h3><a href="https://www.fedlex.admin.ch/eli/cc/27/317_321_377/de#art_105" target="_blank" rel="noopener">Art. 105 OR – Weiterer Schaden <i class="fas fa-external-link-alt"></i></a></h3>
+                </div>
+                <div class="law-content">
+                    <ol>
+                        <li>Ein Schuldner, der mit der Zahlung von Zinsen oder mit der Entrichtung von Renten oder mit der Zahlung einer geschenkten Summe im Verzuge ist, hat erst vom Tage der Anhebung der Betreibung oder der gerichtlichen Klage an Verzugszinse zu bezahlen.</li>
+                        <li>Eine entgegenstehende Vereinbarung ist nach den Grundsätzen über Konventionalstrafe zu beurteilen.</li>
+                        <li>Von Verzugszinsen dürfen keine Verzugszinse berechnet werden.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p>
+                <a href="https://durchblick.nl" target="_blank" rel="noopener">Durchblick Consultancy BV</a>
+                &nbsp;•&nbsp;
+                <a href="https://github.com/chosee/verzugszinsrechner" target="_blank" rel="noopener">
+                    <i class="fab fa-github"></i> Source Code auf GitHub
+                </a>
+            </p>
+            <p class="footer-disclaimer">Dieser Rechner dient nur zur Orientierung. Keine Rechtsberatung.</p>
+        </div>
+    </footer>
+
+    <div class="print-header" style="display: none;">
+        <img src="https://www.durchblick.nl/images/durchblick_logo.svg"
+             alt="Durchblick Consultancy Logo">
+        <div>
+            <h2>Verzugszinsberechnung</h2>
+            <p id="printDate" style="font-size: 0.9rem; color: #666; margin-top: 0.25rem;"></p>
+        </div>
+    </div>
+
+    <div class="print-footer" style="display: none;">
+        <p><strong>verzugszinsrechner.ch</strong> – Verzugszinsrechner nach Schweizerischem Obligationenrecht (OR)</p>
+        <p>Dieser Ausdruck dient nur zur Orientierung. Keine Rechtsberatung.</p>
+    </div>
+
+    <div id="disclaimerModal" class="modal">
+        <div class="modal-content">
+            <h2>Rechtlicher Hinweis</h2>
+            <div class="disclaimer-text">
+                <p><strong>Haftungsausschluss und Nutzungsbedingungen</strong></p>
+                <p>Durchblick Consultancy BV stellt diesen Verzugszinsrechner als unverbindliches Hilfsmittel zur Verfügung. Trotz sorgfältiger Entwicklung kann keine Gewähr für die Richtigkeit der Berechnungen übernommen werden.</p>
+
+                <p>Insbesondere wird darauf hingewiesen:</p>
+                <ul>
+                    <li>Der Rechner dient nur zur Orientierung und ersetzt keine Rechtsberatung.</li>
+                    <li>Für verbindliche Berechnungen konsultieren Sie einen Rechtsanwalt.</li>
+                    <li>Durchblick Consultancy BV übernimmt keine Haftung für Schäden aus der Nutzung.</li>
+                </ul>
+
+                <p>Mit der Nutzung akzeptieren Sie diese Bedingungen.</p>
+            </div>
+            <button onclick="acceptDisclaimer()" class="accept-button">
+                Ich habe den Hinweis gelesen und akzeptiere die Bedingungen
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="../scripts/calculations.js"></script>
+    <script src="../scripts/app.js"></script>
+</body>
+</html>
