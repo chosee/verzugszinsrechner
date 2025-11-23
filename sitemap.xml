@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+    <!-- German version -->
+    <url>
+        <loc>https://verzugszinsrechner.ch/de/</loc>
+        <lastmod>2025-11-23</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="de" href="https://verzugszinsrechner.ch/de/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://verzugszinsrechner.ch/fr/"/>
+    </url>
+
+    <!-- French version -->
+    <url>
+        <loc>https://verzugszinsrechner.ch/fr/</loc>
+        <lastmod>2025-11-23</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+        <xhtml:link rel="alternate" hreflang="de" href="https://verzugszinsrechner.ch/de/"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://verzugszinsrechner.ch/fr/"/>
+    </url>
+
+</urlset>
