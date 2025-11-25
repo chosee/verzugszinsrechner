@@ -66,7 +66,7 @@ const VerzugszinsPdfExport = {
 
         doc.setFontSize(14);
         doc.setTextColor(...accentColor);
-        doc.text(this.formatCHF(data.interest), 120, y + 10);
+        doc.text(this.formatCHF(data.interest), 190, y + 10, { align: 'right' });
 
         doc.setTextColor(...primaryColor);
         doc.setFontSize(10);
@@ -75,7 +75,7 @@ const VerzugszinsPdfExport = {
         doc.setFontSize(14);
         doc.setTextColor(0, 0, 0);
         doc.setFont('helvetica', 'bold');
-        doc.text(this.formatCHF(data.total), 120, y + 25);
+        doc.text(this.formatCHF(data.total), 190, y + 25, { align: 'right' });
 
         y += 45;
 
@@ -147,7 +147,7 @@ const VerzugszinsPdfExport = {
         rows.forEach(row => {
             doc.text(row[0], x, y);
             doc.setFont('helvetica', 'bold');
-            doc.text(row[1], 120, y);
+            doc.text(row[1], 190, y, { align: 'right' });
             doc.setFont('helvetica', 'normal');
             y += 6;
         });
@@ -283,7 +283,7 @@ const MahnrechnerPdfExport = {
 
         doc.setFontSize(14);
         doc.setTextColor(...accentColor);
-        doc.text(this.formatCHF(data.reminderFees), 120, y + 10);
+        doc.text(this.formatCHF(data.reminderFees), 190, y + 10, { align: 'right' });
 
         doc.setTextColor(...primaryColor);
         doc.setFontSize(10);
@@ -292,7 +292,7 @@ const MahnrechnerPdfExport = {
         doc.setFontSize(14);
         doc.setTextColor(0, 0, 0);
         doc.setFont('helvetica', 'bold');
-        doc.text(this.formatCHF(data.total), 120, y + 25);
+        doc.text(this.formatCHF(data.total), 190, y + 25, { align: 'right' });
 
         y += 45;
 
@@ -324,7 +324,7 @@ const MahnrechnerPdfExport = {
         rows.forEach(row => {
             doc.text(row[0], x, y);
             doc.setFont('helvetica', 'bold');
-            doc.text(row[1], 120, y);
+            doc.text(row[1], 190, y, { align: 'right' });
             doc.setFont('helvetica', 'normal');
             y += 6;
         });
