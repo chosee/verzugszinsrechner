@@ -1594,6 +1594,7 @@
 
         .currency-input-wrapper input {
             padding-left: 3.5rem;
+            text-align: right;
         }
 
         #principal {
