@@ -98,6 +98,13 @@ UI-Logik:
 - Ergebnisanzeige
 - Disclaimer-Modal
 
+### scripts/pdf-export.js
+
+PDF-Export-Funktionalität (jsPDF):
+- **VerzugszinsPdfExport**: Export für Verzugszinsberechnung
+- **MahnrechnerPdfExport**: Export für Mahnkostenberechnung inkl. aller Mahnungen, Zinsen und Gesamtforderung
+- Alle PDFs werden lokal im Browser erstellt (keine Serverübertragung)
+
 ## Tests
 
 ```bash

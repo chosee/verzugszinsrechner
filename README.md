@@ -133,6 +133,7 @@ verzugszinsrechner/
 - Vanilla HTML/CSS/JavaScript (kein Framework)
 - Bilingue DE/FR avec détection automatique
 - Aucun backend – calculs côté client
+- PDF-Export direkt im Browser (keine Datenübertragung)
 - Open Source
 
 ## Tests
