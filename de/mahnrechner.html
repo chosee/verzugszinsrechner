@@ -453,7 +453,8 @@
 
         function parseSwissNumber(str) {
             if (!str) return 0;
-            return parseFloat(str.replace(/'/g, '').replace(/,/g, '.')) || 0;
+            // Remove all types of apostrophes, quotes, and spaces used as thousands separators
+            return parseFloat(str.replace(/[''\u2019\u2018\u02BC\s]/g, '').replace(/,/g, '.')) || 0;
         }
 
         function formatCHF(amount) {

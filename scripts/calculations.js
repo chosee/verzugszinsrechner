@@ -104,10 +104,13 @@ function formatNumber(num, decimals = 2) {
 
 /**
  * Parse Swiss formatted number string to number
+ * Handles various apostrophe characters used as thousands separators
  */
 function parseSwissNumber(str) {
-    // Remove thousands separators (') and replace comma with dot
-    return parseFloat(str.replace(/'/g, '').replace(',', '.'));
+    if (typeof str !== 'string') return str;
+    // Remove all types of apostrophes, quotes, and spaces used as thousands separators
+    // Then replace comma with dot for decimal
+    return parseFloat(str.replace(/[''\u2019\u2018\u02BC\s]/g, '').replace(',', '.'));
 }
 
 // Export for Node.js testing
