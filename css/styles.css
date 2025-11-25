@@ -1613,3 +1613,35 @@
             box-shadow: 0 0 0 3px rgba(19, 117, 188, 0.2);
             background-color: white;
         }
+
+        /* Result table styling */
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .result-table td {
+            padding: 8px 0;
+            vertical-align: top;
+        }
+
+        .result-table td:first-child {
+            width: 60%;
+        }
+
+        .result-table td.amount,
+        .result-table td:last-child {
+            text-align: right;
+            font-family: 'Economica', monospace;
+            white-space: nowrap;
+        }
+
+        .result-table .result-total {
+            border-top: 2px solid rgba(255,255,255,0.3);
+            margin-top: 10px;
+        }
+
+        .result-table .result-total td {
+            padding-top: 15px;
+            font-size: 1.1em;
+        }
