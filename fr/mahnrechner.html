@@ -144,6 +144,9 @@
 <body>
     <div class="container">
         <div class="header-row">
+            <button type="button" class="dark-mode-toggle" aria-label="Basculer le mode sombre" onclick="DarkMode.toggle()">
+                <i class="fas fa-moon"></i>
+            </button>
             <div class="language-switcher">
                 <a href="../de/mahnrechner.html" class="lang-btn">DE</a>
                 <a href="../fr/mahnrechner.html" class="lang-btn active">FR</a>
@@ -155,6 +158,7 @@
         <nav class="tool-nav">
             <a href="../fr/">Calculateur d'intérêts</a>
             <a href="../fr/mahnrechner.html" class="active">Calculateur de rappels</a>
+            <a href="../fr/mwst.html">Calculateur TVA</a>
         </nav>
 
         <div class="steps-container">
@@ -311,6 +315,12 @@
                     <button type="button" onclick="exportPDF()" class="print-button">
                         <i class="fas fa-file-pdf"></i> Enregistrer en PDF
                     </button>
+                    <button type="button" onclick="copyMahnResult()" class="btn btn-secondary copy-btn">
+                        <i class="fas fa-copy"></i> Copier
+                    </button>
+                    <a href="https://gerichtskostenrechner.ch/fr/betreibung.html" class="btn btn-secondary" target="_blank" rel="noopener">
+                        <i class="fas fa-arrow-right"></i> Continuer vers la poursuite
+                    </a>
                 </div>
                 <div class="result-summary"></div>
             </div>
@@ -402,6 +412,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="../scripts/utils.js"></script>
     <script src="../scripts/calculations.js"></script>
     <script>
         let reminderCount = 1;
@@ -632,6 +643,39 @@
                 document.getElementById('disclaimerModal').style.display = 'flex';
             }
         });
+
+        // Copy result to clipboard
+        function copyMahnResult() {
+            if (!lastMahnData) return;
+
+            const d = lastMahnData;
+            let text = `Calcul des frais de rappel
+Montant de la facture: CHF ${formatCHF(d.principal)}
+`;
+            if (d.reminders.length > 0) {
+                text += `\nFrais de rappel:`;
+                d.reminders.forEach((r, i) => {
+                    if (r.fee > 0) {
+                        const ordinal = i === 0 ? '1er' : (i + 1) + 'e';
+                        text += `\n  ${ordinal} rappel: CHF ${formatCHF(r.fee)}`;
+                    }
+                });
+                text += `\n  Total frais de rappel: CHF ${formatCHF(d.totalFees)}`;
+            }
+            text += `\n\nIntérêts moratoires:
+  Taux: ${d.rate}% p.a.
+  Période de demeure: ${d.days} jours
+  Intérêts moratoires: CHF ${formatCHF(d.interest)}
+
+Créance totale: CHF ${formatCHF(d.total)}
+
+Calculé sur verzugszinsrechner.ch/fr/mahnrechner.html`;
+
+            const button = document.querySelector('.copy-btn');
+            ClipboardUtils.copy(text).then(success => {
+                ClipboardUtils.showFeedback(button, success);
+            });
+        }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.3/jspdf.umd.min.js"></script>
     <script src="../scripts/pdf-export.js"></script>

@@ -238,3 +238,114 @@ function exportPDF() {
         printResult();
     }
 }
+
+// ============================================
+// COPY & SHARE FUNCTIONS
+// ============================================
+
+function copyResultToClipboard() {
+    if (!lastCalculationResult) return;
+
+    const lang = document.documentElement.lang || 'de';
+    const result = lastCalculationResult;
+    const dateOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+    const locale = lang === 'fr' ? 'fr-CH' : 'de-CH';
+
+    let text;
+    if (lang === 'fr') {
+        text = `Calcul d'intérêts moratoires
+Capital: ${formatCHF(result.principal)}
+Période: ${result.startDate.toLocaleDateString(locale, dateOptions)} – ${result.endDate.toLocaleDateString(locale, dateOptions)}
+Jours: ${result.days}
+Taux: ${result.interestRate}% p.a.
+Intérêts: ${formatCHF(result.interest)}
+Total: ${formatCHF(result.total)}
+
+Calculé sur verzugszinsrechner.ch`;
+    } else {
+        text = `Verzugszinsberechnung
+Kapital: ${formatCHF(result.principal)}
+Zeitraum: ${result.startDate.toLocaleDateString(locale, dateOptions)} – ${result.endDate.toLocaleDateString(locale, dateOptions)}
+Tage: ${result.days}
+Zinssatz: ${result.interestRate}% p.a.
+Verzugszins: ${formatCHF(result.interest)}
+Total: ${formatCHF(result.total)}
+
+Berechnet auf verzugszinsrechner.ch`;
+    }
+
+    const button = document.querySelector('.copy-btn');
+    ClipboardUtils.copy(text).then(success => {
+        ClipboardUtils.showFeedback(button, success);
+    });
+}
+
+function shareCalculation() {
+    if (!lastCalculationResult) return;
+
+    const result = lastCalculationResult;
+    const formatDate = (date) => {
+        const d = date.getDate().toString().padStart(2, '0');
+        const m = (date.getMonth() + 1).toString().padStart(2, '0');
+        const y = date.getFullYear();
+        return `${d}.${m}.${y}`;
+    };
+
+    const params = {
+        p: result.principal,
+        s: formatDate(result.startDate),
+        e: formatDate(result.endDate),
+        r: result.interestRate
+    };
+
+    const button = document.querySelector('.share-btn');
+    ShareUtils.shareUrl(params, button);
+}
+
+// ============================================
+// URL PARAMETER HANDLING
+// ============================================
+
+function loadFromUrlParams() {
+    const params = UrlParams.getAll();
+
+    if (params.p) {
+        const principal = parseFloat(params.p);
+        if (!isNaN(principal)) {
+            document.getElementById('principal').value = formatNumber(principal, 2);
+        }
+    }
+
+    if (params.s && startDatePicker) {
+        startDatePicker.setDate(params.s, false, 'd.m.Y');
+    }
+
+    if (params.e && endDatePicker) {
+        endDatePicker.setDate(params.e, false, 'd.m.Y');
+    }
+
+    if (params.r) {
+        const rate = parseFloat(params.r);
+        if (!isNaN(rate)) {
+            if (rate === 5) {
+                document.getElementById('rateType').value = '5';
+            } else {
+                document.getElementById('rateType').value = 'custom';
+                toggleCustomRate();
+                document.getElementById('customRate').value = rate;
+            }
+        }
+    }
+
+    // Auto-calculate if all parameters present
+    if (params.p && params.s && params.e) {
+        setTimeout(() => {
+            document.getElementById('zinsForm').dispatchEvent(new Event('submit'));
+        }, 100);
+    }
+}
+
+// Load URL parameters after flatpickr is initialized
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(loadFromUrlParams, 200);
+});

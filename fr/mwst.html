@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur TVA Suisse - Calcul de la taxe sur la valeur ajoutée</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <meta name="description" content="Calculez la TVA suisse. Taux normal 8.1%, taux réduit 2.6%, hébergement 3.8%. Brut à net et inversement.">
+    <meta name="keywords" content="calculateur TVA, taxe sur la valeur ajoutée, TVA, Suisse, 8.1%, taux normal, taux réduit, hébergement, brut, net">
+    <meta name="author" content="Durchblick Consultancy BV">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://verzugszinsrechner.ch/fr/mwst.html">
+    <meta property="og:title" content="Calculateur TVA Suisse">
+    <meta property="og:description" content="Calculez la TVA suisse. Taux normal 8.1%, taux réduit 2.6%, hébergement 3.8%.">
+    <meta property="og:image" content="https://verzugszinsrechner.ch/images/og-zins-fr.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="fr_CH">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Calculateur TVA Suisse">
+    <meta name="twitter:description" content="Calculez la TVA suisse. Taux normal 8.1%, taux réduit 2.6%, hébergement 3.8%.">
+    <meta name="twitter:image" content="https://verzugszinsrechner.ch/images/og-zins-fr.png">
+
+    <!-- Canonical & Language -->
+    <link rel="canonical" href="https://verzugszinsrechner.ch/fr/mwst.html">
+    <link rel="alternate" hreflang="de" href="https://verzugszinsrechner.ch/de/mwst.html">
+    <link rel="alternate" hreflang="fr" href="https://verzugszinsrechner.ch/fr/mwst.html">
+
+    <!-- JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Calculateur TVA Suisse",
+        "description": "Calculez la TVA suisse",
+        "url": "https://verzugszinsrechner.ch/fr/mwst.html",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "fr-CH",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "CHF"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "Durchblick Consultancy BV",
+            "url": "https://durchblick.nl"
+        }
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Economica:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .tool-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tool-nav a {
+            padding: 8px 16px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #3f606f;
+            font-family: 'Economica', sans-serif;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .tool-nav a:hover {
+            background: #e8e8e8;
+        }
+        .tool-nav a.active {
+            background: #3f606f;
+            color: white;
+        }
+        [data-theme="dark"] .tool-nav a {
+            background: var(--card-bg);
+            color: var(--primary-color);
+        }
+        [data-theme="dark"] .tool-nav a:hover {
+            background: var(--border-color);
+        }
+        [data-theme="dark"] .tool-nav a.active {
+            background: var(--primary-color);
+            color: var(--bg-color);
+        }
+
+        .direction-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .direction-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid var(--primary-color);
+            background: var(--card-bg);
+            color: var(--primary-color);
+            border-radius: 8px;
+            font-family: 'Economica', sans-serif;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .direction-btn:hover {
+            background: var(--light-bg);
+        }
+        .direction-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .rate-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 600px) {
+            .rate-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        .rate-card {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .rate-card:hover {
+            border-color: var(--primary-color);
+            background: var(--light-bg);
+        }
+        .rate-card.active {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+        .rate-card .rate-value {
+            font-family: 'Economica', sans-serif;
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+        .rate-card .rate-label {
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .result-breakdown {
+            background: var(--light-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .result-row:last-child {
+            border-bottom: none;
+        }
+        .result-row.total {
+            font-weight: bold;
+            padding-top: 15px;
+            margin-top: 10px;
+            border-top: 2px solid var(--primary-color);
+            border-bottom: none;
+        }
+        .result-row .label {
+            color: var(--text-muted);
+        }
+        .result-row .amount {
+            font-family: 'Economica', sans-serif;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .info-card {
+            background: var(--light-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .info-card h3 {
+            margin: 0 0 15px 0;
+            color: var(--primary-color);
+            font-family: 'Economica', sans-serif;
+        }
+        .info-card table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .info-card th, .info-card td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .info-card th {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        .info-card td:last-child {
+            text-align: right;
+            font-family: 'Economica', sans-serif;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-row">
+            <button type="button" class="dark-mode-toggle" aria-label="Basculer le mode sombre" onclick="DarkMode.toggle()">
+                <i class="fas fa-moon"></i>
+            </button>
+            <div class="language-switcher">
+                <a href="../de/mwst.html" class="lang-btn">DE</a>
+                <a href="../fr/mwst.html" class="lang-btn active">FR</a>
+            </div>
+        </div>
+
+        <h1><img src="../favicon.svg" alt="" class="title-icon">Calculateur TVA Suisse</h1>
+
+        <nav class="tool-nav">
+            <a href="../fr/">Intérêts moratoires</a>
+            <a href="../fr/mahnrechner.html">Rappel</a>
+            <a href="../fr/mwst.html" class="active">TVA</a>
+        </nav>
+
+        <div class="steps-container">
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                    <div class="step-number">1</div>
+                </div>
+                <div class="step-content">
+                    <h3>Choisir la direction</h3>
+                    <p>TTC vers HT ou HT vers TTC - selon le montant dont vous disposez.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="fas fa-percent"></i>
+                    <div class="step-number">2</div>
+                </div>
+                <div class="step-content">
+                    <h3>Choisir le taux de TVA</h3>
+                    <p>Taux normal 8.1%, taux réduit 2.6% ou hébergement 3.8%.</p>
+                </div>
+            </div>
+
+            <div class="step-card">
+                <div class="step-icon">
+                    <i class="fas fa-calculator"></i>
+                    <div class="step-number">3</div>
+                </div>
+                <div class="step-content">
+                    <h3>Calculer</h3>
+                    <p>Le montant HT, la TVA et le montant TTC sont calculés automatiquement.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="calculator-card">
+            <div class="direction-toggle">
+                <button type="button" class="direction-btn active" data-direction="gross-to-net">
+                    <i class="fas fa-arrow-down"></i> TTC → HT
+                </button>
+                <button type="button" class="direction-btn" data-direction="net-to-gross">
+                    <i class="fas fa-arrow-up"></i> HT → TTC
+                </button>
+            </div>
+
+            <div class="rate-cards">
+                <div class="rate-card active" data-rate="8.1">
+                    <div class="rate-value">8.1%</div>
+                    <div class="rate-label">Taux normal</div>
+                </div>
+                <div class="rate-card" data-rate="2.6">
+                    <div class="rate-value">2.6%</div>
+                    <div class="rate-label">Taux réduit</div>
+                </div>
+                <div class="rate-card" data-rate="3.8">
+                    <div class="rate-value">3.8%</div>
+                    <div class="rate-label">Hébergement</div>
+                </div>
+            </div>
+
+            <form id="mwstForm">
+                <div class="form-group">
+                    <label for="amount" class="required" id="amountLabel">Montant TTC (CHF)</label>
+                    <input type="text"
+                           id="amount"
+                           name="amount"
+                           inputmode="decimal"
+                           placeholder="p.ex. 1000.00"
+                           required>
+                    <small class="form-hint" id="amountHint">Le montant TVA comprise</small>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-calculator"></i>
+                    Calculer
+                </button>
+            </form>
+
+            <div id="result" class="result-section" style="display: none;">
+                <h3>Calcul</h3>
+                <div class="result-breakdown">
+                    <div class="result-row">
+                        <span class="label">Montant HT</span>
+                        <span class="amount" id="netAmount">CHF 0.00</span>
+                    </div>
+                    <div class="result-row">
+                        <span class="label">TVA (<span id="rateDisplay">8.1%</span>)</span>
+                        <span class="amount" id="vatAmount">CHF 0.00</span>
+                    </div>
+                    <div class="result-row total">
+                        <span class="label">Montant TTC</span>
+                        <span class="amount" id="grossAmount">CHF 0.00</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="button" class="action-btn" onclick="copyResult()">
+                        <i class="fas fa-copy"></i> Copier
+                    </button>
+                    <button type="button" class="action-btn" onclick="shareResult()">
+                        <i class="fas fa-share-alt"></i> Partager
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <h3><i class="fas fa-info-circle"></i> Taux de TVA en Suisse (dès 2024)</h3>
+            <table>
+                <tr>
+                    <th>Taux</th>
+                    <th>Application</th>
+                    <th>Taux</th>
+                </tr>
+                <tr>
+                    <td>Taux normal</td>
+                    <td>La plupart des biens et services</td>
+                    <td>8.1%</td>
+                </tr>
+                <tr>
+                    <td>Taux réduit</td>
+                    <td>Denrées alimentaires, livres, journaux, médicaments</td>
+                    <td>2.6%</td>
+                </tr>
+                <tr>
+                    <td>Taux spécial</td>
+                    <td>Prestations d'hébergement (hôtels, etc.)</td>
+                    <td>3.8%</td>
+                </tr>
+            </table>
+            <p style="margin-top: 15px; font-size: 0.9em; color: var(--text-muted);">
+                <strong>Base légale:</strong> <a href="https://www.fedlex.admin.ch/eli/cc/2009/615/fr" target="_blank" rel="noopener">Loi sur la TVA (LTVA)</a> |
+                <a href="https://www.estv.admin.ch/estv/fr/accueil/taxe-sur-la-valeur-ajoutee/taux-de-tva.html" target="_blank" rel="noopener">Taux de TVA actuels (AFC)</a>
+            </p>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <p><a href="https://durchblick.nl/tools_fr.html" target="_blank" rel="noopener">Durchblick Consultancy BV – Outils juridiques gratuits pour la Suisse</a></p>
+            <p class="footer-disclaimer">Ce calculateur sert uniquement à titre indicatif. Pas de conseil juridique.</p>
+            <p class="footer-privacy">Tous les calculs sont effectués directement dans votre navigateur. Aucune donnée utilisateur n'est collectée ou stockée.</p>
+        </div>
+    </footer>
+
+    <script src="../scripts/utils.js"></script>
+    <script>
+        // State
+        let direction = 'gross-to-net';
+        let rate = 8.1;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            DarkMode.init();
+
+            // Direction toggle
+            document.querySelectorAll('.direction-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.direction-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    direction = this.dataset.direction;
+                    updateLabels();
+                });
+            });
+
+            // Rate cards
+            document.querySelectorAll('.rate-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    document.querySelectorAll('.rate-card').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    rate = parseFloat(this.dataset.rate);
+                });
+            });
+
+            // Form submit
+            document.getElementById('mwstForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                calculate();
+            });
+
+            // Auto-calculate on input
+            document.getElementById('amount').addEventListener('input', function() {
+                if (this.value) {
+                    calculate();
+                }
+            });
+        });
+
+        function updateLabels() {
+            const label = document.getElementById('amountLabel');
+            const hint = document.getElementById('amountHint');
+
+            if (direction === 'gross-to-net') {
+                label.innerHTML = 'Montant TTC (CHF)';
+                hint.textContent = 'Le montant TVA comprise';
+            } else {
+                label.innerHTML = 'Montant HT (CHF)';
+                hint.textContent = 'Le montant hors TVA';
+            }
+        }
+
+        function calculate() {
+            const amountStr = document.getElementById('amount').value.replace(/['\s]/g, '').replace(',', '.');
+            const amount = parseFloat(amountStr);
+
+            if (isNaN(amount) || amount <= 0) {
+                return;
+            }
+
+            let netAmount, vatAmount, grossAmount;
+
+            if (direction === 'gross-to-net') {
+                grossAmount = amount;
+                netAmount = amount / (1 + rate / 100);
+                vatAmount = grossAmount - netAmount;
+            } else {
+                netAmount = amount;
+                vatAmount = amount * rate / 100;
+                grossAmount = netAmount + vatAmount;
+            }
+
+            // Display results
+            document.getElementById('netAmount').textContent = formatCHF(netAmount);
+            document.getElementById('vatAmount').textContent = formatCHF(vatAmount);
+            document.getElementById('grossAmount').textContent = formatCHF(grossAmount);
+            document.getElementById('rateDisplay').textContent = rate + '%';
+            document.getElementById('result').style.display = 'block';
+
+            // Update URL
+            updateURL(amount);
+        }
+
+        function formatCHF(amount) {
+            return 'CHF ' + amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+        }
+
+        function updateURL(amount) {
+            const params = new URLSearchParams();
+            params.set('montant', amount);
+            params.set('taux', rate);
+            params.set('direction', direction);
+
+            const newURL = window.location.pathname + '?' + params.toString();
+            window.history.replaceState({}, '', newURL);
+        }
+
+        function copyResult() {
+            const net = document.getElementById('netAmount').textContent;
+            const vat = document.getElementById('vatAmount').textContent;
+            const gross = document.getElementById('grossAmount').textContent;
+
+            const text = `Calcul TVA (${rate}%)\n` +
+                        `Montant HT: ${net}\n` +
+                        `TVA: ${vat}\n` +
+                        `Montant TTC: ${gross}`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Résultat copié!');
+            });
+        }
+
+        function shareResult() {
+            const url = window.location.href;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Calcul TVA',
+                    text: 'Calcul TVA sur verzugszinsrechner.ch',
+                    url: url
+                });
+            } else {
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('Lien copié!');
+                });
+            }
+        }
+
+        // Load from URL params
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+
+            if (params.has('montant')) {
+                document.getElementById('amount').value = params.get('montant');
+            }
+            if (params.has('taux')) {
+                rate = parseFloat(params.get('taux'));
+                document.querySelectorAll('.rate-card').forEach(card => {
+                    card.classList.toggle('active', parseFloat(card.dataset.rate) === rate);
+                });
+            }
+            if (params.has('direction')) {
+                direction = params.get('direction');
+                document.querySelectorAll('.direction-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.direction === direction);
+                });
+                updateLabels();
+            }
+
+            if (params.has('montant')) {
+                setTimeout(calculate, 100);
+            }
+        })();
+    </script>
+</body>
+</html>

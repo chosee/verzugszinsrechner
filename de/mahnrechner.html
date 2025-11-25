@@ -144,6 +144,9 @@
 <body>
     <div class="container">
         <div class="header-row">
+            <button type="button" class="dark-mode-toggle" aria-label="Dunkelmodus umschalten" onclick="DarkMode.toggle()">
+                <i class="fas fa-moon"></i>
+            </button>
             <div class="language-switcher">
                 <a href="../de/mahnrechner.html" class="lang-btn active">DE</a>
                 <a href="../fr/mahnrechner.html" class="lang-btn">FR</a>
@@ -155,6 +158,7 @@
         <nav class="tool-nav">
             <a href="../de/">Verzugszinsrechner</a>
             <a href="../de/mahnrechner.html" class="active">Mahnrechner</a>
+            <a href="../de/mwst.html">MWST-Rechner</a>
         </nav>
 
         <div class="steps-container">
@@ -311,6 +315,12 @@
                     <button type="button" onclick="exportPDF()" class="print-button">
                         <i class="fas fa-file-pdf"></i> Als PDF speichern
                     </button>
+                    <button type="button" onclick="copyMahnResult()" class="btn btn-secondary copy-btn">
+                        <i class="fas fa-copy"></i> Kopieren
+                    </button>
+                    <a href="https://gerichtskostenrechner.ch/de/betreibung.html" class="btn btn-secondary" target="_blank" rel="noopener">
+                        <i class="fas fa-arrow-right"></i> Weiter zur Betreibung
+                    </a>
                 </div>
                 <div class="result-summary"></div>
             </div>
@@ -402,6 +412,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="../scripts/utils.js"></script>
     <script src="../scripts/calculations.js"></script>
     <script>
         let reminderCount = 1;
@@ -625,6 +636,38 @@
                 document.getElementById('disclaimerModal').style.display = 'flex';
             }
         });
+
+        // Copy result to clipboard
+        function copyMahnResult() {
+            if (!lastMahnData) return;
+
+            const d = lastMahnData;
+            let text = `Mahnkostenberechnung
+Rechnungsbetrag: CHF ${formatCHF(d.principal)}
+`;
+            if (d.reminders.length > 0) {
+                text += `\nMahngebühren:`;
+                d.reminders.forEach((r, i) => {
+                    if (r.fee > 0) {
+                        text += `\n  ${i + 1}. Mahnung: CHF ${formatCHF(r.fee)}`;
+                    }
+                });
+                text += `\n  Total Mahngebühren: CHF ${formatCHF(d.totalFees)}`;
+            }
+            text += `\n\nVerzugszinsen:
+  Zinssatz: ${d.rate}% p.a.
+  Verzugszeitraum: ${d.days} Tage
+  Verzugszinsen: CHF ${formatCHF(d.interest)}
+
+Gesamtforderung: CHF ${formatCHF(d.total)}
+
+Berechnet auf verzugszinsrechner.ch/de/mahnrechner.html`;
+
+            const button = document.querySelector('.copy-btn');
+            ClipboardUtils.copy(text).then(success => {
+                ClipboardUtils.showFeedback(button, success);
+            });
+        }
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/3.0.3/jspdf.umd.min.js"></script>
     <script src="../scripts/pdf-export.js"></script>
