@@ -403,6 +403,7 @@
     <script src="../scripts/calculations.js"></script>
     <script>
         let reminderCount = 1;
+        let lastMahnData = null;
 
         function addReminder() {
             reminderCount++;
@@ -602,8 +603,6 @@
         }
 
         // PDF Export
-        let lastMahnData = null;
-
         function exportPDF() {
             if (!lastMahnData) {
                 alert('Veuillez d\'abord effectuer un calcul.');
