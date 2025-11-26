@@ -29,12 +29,34 @@ verzugszinsrechner/
 ├── scripts/
 │   ├── calculations.js     # Berechnungslogik
 │   ├── app.js              # UI-Logik
+│   ├── utils.js            # Hilfsfunktionen (Dark Mode, etc.)
 │   └── pdf-export.js       # PDF-Export (jsPDF)
+├── downloads/              # Offline-Bundles (ZIP-Dateien)
+├── offline-bundle/         # Build-Tools für Offline-Versionen
+│   ├── build-all-offline.js  # Build-Script
+│   └── *.ttf, *.min.js     # Eingebettete Assets
 ├── images/
 │   ├── og-zins-de.png      # OG-Bild Deutsch (1200x630)
 │   └── og-zins-fr.png      # OG-Bild Französisch (1200x630)
 └── test.js                 # Tests (node test.js)
 ```
+
+## Offline-Bundles
+
+Jedes Tool ist als standalone HTML-Datei verfügbar, die ohne Internet funktioniert.
+
+### Build-Befehl
+
+```bash
+cd offline-bundle && node build-all-offline.js
+```
+
+### Verfügbare Bundles
+
+| Tool | DE | FR |
+|------|----|----|
+| Verzugszinsrechner | `verzugszinsrechner-offline-de.zip` | `verzugszinsrechner-offline-fr.zip` |
+| Mahnrechner | `mahnrechner-offline-de.zip` | `mahnrechner-offline-fr.zip` |
 
 ## Berechnungslogik
 
